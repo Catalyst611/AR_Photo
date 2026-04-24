@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- 引入 A-Frame 和 Mind-AR -->
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+      #example-start-button { position: fixed; top: 20px; left: 20px; z-index: 1000; padding: 10px; background: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <!-- 由于浏览器限制，必须由用户点击按钮才能播放声音 -->
+    <button id="example-start-button">点击启动 AR 体验</button>
+
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: false;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+      <a-assets>
+        <!-- 你的音频文件 -->
+        <audio id="soundEffect" src="./music.mp3" preload="auto"></audio>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!-- targetIndex: 0 对应你编译的第一张图 -->
+      <a-entity id="example-target" mindar-image-target="targetIndex: 0">
+        <!-- 这里可以放置一个 3D 模型，或者简单的透明平面，或者仅仅用于触发声音 -->
+      </a-entity>
+    </a-scene>
+
+    <script>
+      const startButton = document.querySelector("#example-start-button");
+      const sceneEl = document.querySelector("a-scene");
+      const audio = document.querySelector("#soundEffect");
+      const targetEntity = document.querySelector("#example-target");
+
+      // 启动 AR
+      startButton.addEventListener('click', () => {
+        sceneEl.systems["mindar-image-system"].start();
+        startButton.style.display = "none";
+      });
+
+      // 核心逻辑：识别到图像时播放，丢失识别时暂停
+      targetEntity.addEventListener("targetFound", event => {
+        console.log("识别成功！播放声音");
+        audio.play();
+      });
+
+      targetEntity.addEventListener("targetLost", event => {
+        console.log("目标丢失");
+        audio.pause();
+      });
+    </script>
+  </body>
+</html>
