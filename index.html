@@ -12,6 +12,10 @@
     <!-- 由于浏览器限制，必须由用户点击按钮才能播放声音 -->
     <button id="example-start-button">点击启动 AR 体验</button>
 
+    <div id="instruction" style="position:fixed; bottom:20%; width:100%; text-align:center; color:white; z-index:1001;">
+     温馨提示：点击启动后，请将摄像头对准相框里的照片
+     </div>
+
     <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: false;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
         <!-- 你的音频文件 -->
